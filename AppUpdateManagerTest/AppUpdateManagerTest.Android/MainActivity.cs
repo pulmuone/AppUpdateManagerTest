@@ -23,11 +23,38 @@ namespace AppUpdateManagerTest.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
         }
+
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            appUpdateManager = AppUpdateManagerFactory.Create(this);
+            var appUpdateInfoTask = appUpdateManager.AppUpdateInfo;
+            appUpdateInfoTask.AddOnSuccessListener(new AddOnSuccessListener());
+
+            appUpdateManager.RegisterListener(new AppUpdateInstallStateListener());
+        }
+
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            Xamarin.Essentials.Platform.OnResume(this);
+
+            if (appUpdateManager == null)
+            {
+                appUpdateManager = AppUpdateManagerFactory.Create(this);
+            }
+
+            var appUpdateInfoTask = appUpdateManager.AppUpdateInfo;
+            appUpdateInfoTask.AddOnSuccessListener(new AddOnSuccessListener2());
         }
 
         public class AddOnSuccessListener : Java.Lang.Object, IOnSuccessListener
@@ -36,7 +63,7 @@ namespace AppUpdateManagerTest.Droid
             {
                 var p1 = p0.JavaCast<AppUpdateInfo>();
 
-                System.Diagnostics.Debug.WriteLine(p1.AvailableVersionCode().ToString()); //Version number (정수)
+                System.Diagnostics.Debug.WriteLine(p1.AvailableVersionCode().ToString());
 
                 try
                 {
@@ -60,11 +87,10 @@ namespace AppUpdateManagerTest.Droid
                 var p1 = p0.JavaCast<AppUpdateInfo>();
 
                 //AppInfo.BuildString; //정수형 build번호, Version Number
-                System.Diagnostics.Debug.WriteLine(p1.AvailableVersionCode().ToString()); //Version number (정수)
+                System.Diagnostics.Debug.WriteLine(p1.AvailableVersionCode().ToString());
 
                 try
                 {
-                    //apk로 설치하면 아래 부분이 작동 되지 않음.
                     if (p1.UpdateAvailability() == UpdateAvailability.DeveloperTriggeredUpdateInProgress)
                     {
                         appUpdateManager.StartUpdateFlowForResult(p1, Xamarin.Essentials.Platform.CurrentActivity, AppUpdateOptions.NewBuilder(AppUpdateType.Immediate).Build(), 1001);
@@ -76,8 +102,6 @@ namespace AppUpdateManagerTest.Droid
                 }
             }
         }
-
-
 
         public class AppUpdateInstallStateListener : Java.Lang.Object, IInstallStateUpdatedListener
         {
@@ -91,10 +115,6 @@ namespace AppUpdateManagerTest.Droid
                 }
             }
 
-            public void OnStateUpdate(Object p0)
-            {
-                throw new System.NotImplementedException();
-            }
         }
     }
 }

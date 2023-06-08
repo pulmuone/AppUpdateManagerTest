@@ -63,6 +63,9 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2578" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
+    <PackageReference Include="Xamarin.Google.Android.Play.Core">
+      <Version>1.10.3.5</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Tasks">
       <Version>118.0.2.2</Version>
     </PackageReference>
