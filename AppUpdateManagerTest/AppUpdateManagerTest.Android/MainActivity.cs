@@ -54,7 +54,7 @@ namespace AppUpdateManagerTest.Droid
             }
 
             var appUpdateInfoTask = appUpdateManager.AppUpdateInfo;
-            appUpdateInfoTask.AddOnSuccessListener(new AddOnSuccessListener2());
+            appUpdateInfoTask.AddOnSuccessListener(new AddOnSuccessListener());
         }
 
         public class AddOnSuccessListener : Java.Lang.Object, IOnSuccessListener
@@ -80,28 +80,28 @@ namespace AppUpdateManagerTest.Droid
             }
         }
 
-        public class AddOnSuccessListener2 : Java.Lang.Object, IOnSuccessListener
-        {
-            public void OnSuccess(Java.Lang.Object p0)
-            {
-                var p1 = p0.JavaCast<AppUpdateInfo>();
+        //public class AddOnSuccessListener2 : Java.Lang.Object, IOnSuccessListener
+        //{
+        //    public void OnSuccess(Java.Lang.Object p0)
+        //    {
+        //        var p1 = p0.JavaCast<AppUpdateInfo>();
 
-                //AppInfo.BuildString; //정수형 build번호, Version Number
-                System.Diagnostics.Debug.WriteLine(p1.AvailableVersionCode().ToString());
+        //        //AppInfo.BuildString; //정수형 build번호, Version Number
+        //        System.Diagnostics.Debug.WriteLine(p1.AvailableVersionCode().ToString());
 
-                try
-                {
-                    if (p1.UpdateAvailability() == UpdateAvailability.DeveloperTriggeredUpdateInProgress)
-                    {
-                        appUpdateManager.StartUpdateFlowForResult(p1, Xamarin.Essentials.Platform.CurrentActivity, AppUpdateOptions.NewBuilder(AppUpdateType.Immediate).Build(), 1001);
-                    }
-                }
-                catch (System.Exception e)
-                {
+        //        try
+        //        {
+        //            if (p1.UpdateAvailability() == UpdateAvailability.DeveloperTriggeredUpdateInProgress)
+        //            {
+        //                appUpdateManager.StartUpdateFlowForResult(p1, Xamarin.Essentials.Platform.CurrentActivity, AppUpdateOptions.NewBuilder(AppUpdateType.Immediate).Build(), 1001);
+        //            }
+        //        }
+        //        catch (System.Exception e)
+        //        {
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         public class AppUpdateInstallStateListener : Java.Lang.Object, IInstallStateUpdatedListener
         {
